@@ -1,9 +1,27 @@
 #ifndef MYSDL_H
 #define MYSDL_H
-#include "mzapo_template/mzapo_parlcd.c"
-#include "mzapo_template/mzapo_regs.h";
+
 #include <sys/mman.h>  // for mmap
+#include "mzapo_template/mzapo_parlcd.c"
+#include "mzapo_template/mzapo_regs.h"
+#include "mzapo_template/font_types.h"
+
+#include "mzapo_template/mzapo_parlcd.h"
+#include "mzapo_template/mzapo_phys.h"
+#include "mzapo_template/mzapo_regs.h"
+#include "mzapo_template/serialize_lock.h"
+#include <iostream>
+#include <fcntl.h> 
 #include <stdio.h>
+#include <string>
+#include <cstring>
+#include <fstream>
+#include <map>
+#include <cmath>
+#include <sys/time.h>
+#include <stdlib.h>
+#include <stdint.h>
+#include <unistd.h>
 const int SCREEN_WIDTH = 480;
 const int SCREEN_HEIGHT = 320;
 struct SDL_Rect{
@@ -21,12 +39,20 @@ public:
         fd = open("/dev/mem", O_RDWR | O_SYNC);
         if (fd == -1) {
             perror("open /dev/mem");
-            return NULL;
+            return;
         }
-
-        parlcd_mem_base = mmap(NULL, PARLCD_REG_SIZE, PROT_READ | PROT_WRITE, MAP_SHARED, fd, PARLCD_MEM_BASE_PHYS);
-        if (parlcd_mem_base == MAP_FAILED) {
+        
+        parlcd_mem_base_aux = mmap(NULL, PARLCD_REG_SIZE, PROT_READ | PROT_WRITE, MAP_SHARED, fd, PARLCD_REG_BASE_PHYS);
+        if (parlcd_mem_base_aux == MAP_FAILED) {
             perror("mmap");
+            close(fd);
+            return;
+        }
+    
+        spiled_base = (volatile uint32_t *)mmap(NULL, SPILED_REG_SIZE, PROT_READ | PROT_WRITE, MAP_SHARED, fd, SPILED_REG_BASE_PHYS);
+        if (spiled_base == MAP_FAILED) {
+            perror("mmap spiled_base");
+            spiled_base = nullptr;
             close(fd);
             return;
         }
@@ -48,7 +74,7 @@ public:
                 int dstY = startY + j;
 
                 if (dstX >= 0 && dstX < SCREEN_WIDTH && dstY >= 0 && dstY < SCREEN_HEIGHT)
-                    image[dstY * SCREEN_WIDTH + dstX] = sprite[dstY * width + dstX]
+                    image[dstY * SCREEN_WIDTH + dstX] = sprite[dstY * width + dstX];
             }
     }
                       
@@ -76,7 +102,7 @@ public:
             image[i] = 0x833C; //sky
     }
                       
-    void delete(){
+    void cleanup(){
         cleanup_leds();
         free(image);
     }
@@ -91,8 +117,40 @@ public:
         munmap((void *)spiled_base, SPILED_REG_SIZE);
     }
 
+   void draw_char(uint16_t *buffer, int screen_width, int x, int y, char c, font_descriptor_t *font, uint16_t color) {
+    if (c < font->firstchar || c >= font->firstchar + font->size)
+        c = font->defaultchar;
+
+    int index = c - font->firstchar;
+    const font_bits_t *bitmap = font->bits + font->offset[index];
+    int width = font->width ? font->width[index] : font->maxwidth;
+
+    for (int row = 0; row < font->height; row++) {
+        font_bits_t bits = bitmap[row];  // Each row is a 16-bit value
+        for (int col = 0; col < width; col++) {
+            if (bits & (1 << (15 - col))) { // MSB-first (left-aligned)
+                int px = x + col;
+                int py = y + row;
+                buffer[py * screen_width + px] = color;
+            }
+        }
+    }
+}
+                      
+    void draw_text(uint16_t *buffer, int screen_width, int x, int y, const char *text, font_descriptor_t *font, uint16_t color) {
+    int cursor_x = x;
+    while (*text) {
+        draw_char(buffer, screen_width, cursor_x, y, *text, font, color);
+        int char_index = *text - font->firstchar;
+        int char_width = font->width ? font->width[char_index] : font->maxwidth;
+        cursor_x += char_width + 1; // +1 for spacing
+        text++;
+    }
+}
+
     unsigned char* parlcd_mem_base;
 private:
+    volatile uint32_t *spiled_base = nullptr;
     uint16_t* image;  
     int size = 0;
     

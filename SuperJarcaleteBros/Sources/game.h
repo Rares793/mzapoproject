@@ -7,19 +7,18 @@
 
 class game {  
 public:
-    game() : window(nullptr), renderer(nullptr), gameIsRunning(false) {}
 
     void init() {
         gameIsRunning = true;
-        renderer.initialise();
+        renderer->initialise();
                     
         Player = new player();
-        Player->loadTexture(renderer);
+        Player->loadTexture();
         int* whichIdsPresentInWorld;
         World = new world();
         assets = new tileAssetManager();
-        whichIdsPresentInWorld = World->loadTileMap(WorldEnum::WORLD_1, LevelEnum::LEVEL_1, spawns); //I don't hate myself enough to continue generalising this code
-        assets->initialise(renderer, "Assets/Worlds/World1/spriteSheet.png", whichIdsPresentInWorld, World->getTotalNrOfIds());
+        whichIdsPresentInWorld = World->loadTileMap(WorldEnum::WORLD_1, LevelEnum::LEVEL_1); //I don't hate myself enough to continue generalising this code
+        assets->initialise("Assets/Worlds/World1/spriteSheet.png", whichIdsPresentInWorld, World->getTotalNrOfIds());
         Camera = new camera();    
     }
      
@@ -31,7 +30,7 @@ public:
        
     void play() {
         double lastTime = getCurrentTimeSeconds();
-        renderer.turn_on_leds(0b00000011);
+        renderer->turn_on_leds(0b00000011);
         while (gameIsRunning) {
             double currentTime = getCurrentTimeSeconds();
             deltaTime = (currentTime - lastTime) / 1000.0f; 
@@ -47,12 +46,12 @@ public:
     }
 
     void render() {
-        renderer.clear(); //sets to sky btw
+        renderer->clear(); //sets to sky btw
         
         Player->render(renderer, std::floor(Camera->getX()), std::floor(Camera->getY()));
         World->render(renderer, Camera, assets);
                      
-        renderer.render();
+        renderer->render();
     }
                
     void clean() {
@@ -63,7 +62,7 @@ public:
         delete World;
         delete assets;
         delete Camera;
-        renderer.delete();
+        renderer->cleanup();
         delete renderer;
         printf("\n"); //'cause I compile the game in console and use Arch
     }
@@ -71,13 +70,12 @@ public:
     bool running() const { return gameIsRunning; }
 
 private:
-    SDL_Renderer* renderer;
-    Mix_Music* bgm;
-    bool gameIsRunning;
-    player* Player;
-    world* World;
-    camera* Camera;
-    tileAssetManager* assets; 
+    SDL_Renderer* renderer = nullptr;
+    bool gameIsRunning = false;
+    player* Player = nullptr;
+    world* World = nullptr;
+    camera* Camera = nullptr;
+    tileAssetManager* assets = nullptr; 
     double deltaTime;
 };
 

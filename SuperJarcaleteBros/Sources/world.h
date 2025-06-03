@@ -7,7 +7,7 @@
 
 class world{
 public:
-    int* loadTileMap(WorldEnum world, LevelEnum level, goombaSpawns spawn[11]){
+    int* loadTileMap(WorldEnum world, LevelEnum level){
         delete tileMap;
         
         char* filePathId = (char*)malloc(sizeof(char) * 34); // 34 is the size of the file path, cool I know;
@@ -26,7 +26,6 @@ public:
         
         std::ifstream IdDataFile(filePathId);
         int* idList;
-        int size = 0;
         IdDataFile >> totalNrOfIds;
         idList = (int*)malloc(totalNrOfIds * sizeof(int));
         for(int i = 0; i < totalNrOfIds; i++)
@@ -39,16 +38,8 @@ public:
         tileMapFile >> tileMapWidth >> tileMapHeigth;
         tileMapSize = tileMapWidth * tileMapHeigth;
         tileMap = (int*)malloc(sizeof(int) * tileMapSize);
-        int j = 0;
-        for(int i = 0; i < tileMapSize; i++){
+        for(int i = 0; i < tileMapSize; i++)
             tileMapFile >> tileMap[i];
-            if(tileMap[i] == 6 || tileMap[i] == 7){ //11 in total and yes, koopas have been transformed into goombas, too much work to do to implement koopas when I only have one
-                spawn[j].x = i % tileMapWidth; // Get COLUMN
-                spawn[j].y = i / tileMapWidth; // Get ROW
-                j++;
-                tileMap[i] = 9;                
-            }   
-        }
         tileMapFile.close();
         
         worldWidthPixels = tileMapWidth * TEXTURE_WIDTH;
@@ -97,7 +88,7 @@ public:
                 destRect.w = TEXTURE_WIDTH;
                 destRect.h = TEXTURE_HEIGHT;
 
-                renderer(destRect, texture);
+                renderer->addToMemory(destRect, texture);
             }
         }       
     }       

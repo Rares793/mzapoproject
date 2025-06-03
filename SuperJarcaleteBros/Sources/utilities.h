@@ -1,22 +1,11 @@
 #ifndef UTILITIES_H
 #define UTILITIES_H
 
-#include <iostream>
-#include "MySDL.h"
-#include <stdio.h>
-#include <string>
-#include <fstream>
-#include <map>
-#include <cmath>
-#include <sys/time.h>
-#include <stdlib.h>
-#include <stdint.h>
-#include <unistd.h>
 
-#include "mzapo_parlcd.h"
-#include "mzapo_phys.h"
-#include "mzapo_regs.h"
-#include "serialize_lock.h"
+#include "mySDL.h"
+
+
+
 
 // Screen dimensions
 // 320x480 with 16x16 textures => 20x30 => 600 objects

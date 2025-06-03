@@ -1,5 +1,5 @@
 #ifndef PLAYER_H
-#define PLAYER_h
+#define PLAYER_H
 
 #include "entity.h"
 #include "collisionBox.h"
@@ -14,7 +14,7 @@ public:
         alive = true;
         }               
                                 
-    void loadTexture(SDL_Renderer* renderer) override{
+    void loadTexture() override{
         std::ifstream fin("Assets/Worlds/World1/player16.txt");
         int numPixels = 16 * 16;
         entityTexture = new uint16_t[numPixels];
@@ -82,7 +82,7 @@ public:
                                                            
     void render(SDL_Renderer* renderer, int cameraX, int cameraY) override{
         SDL_Rect screenRect = {entityRect.x - cameraX, entityRect.y - cameraY, entityRect.w, entityRect.h};
-        renderer.addToMemory(screenRect, entityTexture);
+        renderer->addToMemory(screenRect, entityTexture);
     }                              
                                                   
     void destroy() override{

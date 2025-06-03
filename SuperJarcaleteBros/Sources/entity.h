@@ -10,7 +10,7 @@ public:
     
     virtual void handleInput() = 0;
   
-    virtual void loadTexture(SDL_Renderer* renderer) = 0;
+    virtual void loadTexture() = 0;
   
     virtual void resolveMovement(world* gameWorld, tileAssetManager* assets, float deltaTime) = 0;
     

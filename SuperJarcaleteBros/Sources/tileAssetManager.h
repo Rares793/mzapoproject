@@ -15,7 +15,7 @@ public:
          cleanup();
      }
                           
-    void initialise(SDL_Renderer* renderer, const char* spriteSheetFilePath, const int* idList, int nrOfIds){
+    void initialise(const char* spriteSheetFilePath, const int* idList, int nrOfIds){
         cleanup();
         
         std::ifstream fin("Assets/Worlds/World1/spriteSheet.txt");
