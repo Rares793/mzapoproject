@@ -1,0 +1,25 @@
+Colour Interpretation
+0 - ground 
+40 - brick
+80 - lucky block
+100 - stair brick
+140 - pipe
+180 - Goomba
+200 - Koopa
+220 - Flag
+240 - Castle
+255 - Sky
+
+ID Interpretation
+0 - ground 
+1 - brick
+2 - lucky block
+3 - stair brick
+4 - pipe
+10 - pipehead
+5 - Goomba
+6 - Koopa
+7 - Flag pole
+11 - Flag
+8 - Castle
+9- Sky
