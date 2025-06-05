@@ -15,11 +15,11 @@ const int TEXTURE_WIDTH = 16;
 const int TEXTURE_HEIGHT = 16;
 
 const int TILE_SIZE = 16; // this isn't ideal which is why I will avoid using it as much as possible
-const float GRAVITY = 980.0f; // Pixels per second per second
-const float JUMP_STRENGTH = -400.0f; // Negative is up, pixels per second
-const float MOVE_SPEED = 225.0f; // Pixels per second for horizontal movement
+const float GRAVITY = 98000.0f; // Pixels per second per second
+const float JUMP_STRENGTH = -4000.0f; // Negative is up, pixels per second
+const float MOVE_SPEED = 22500.0f; // Pixels per second for horizontal movement
 const float GOOMBA_MOVE_SPEED = 100.0f;
-const float MAX_FALL_SPEED = 600.0f;                                 
+const float MAX_FALL_SPEED = 600000.0f;                                 
 enum WorldEnum{
     WORLD_1,
     WORLD_2,

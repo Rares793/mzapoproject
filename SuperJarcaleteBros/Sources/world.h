@@ -8,8 +8,13 @@
 class world{
 public:
     int* loadTileMap(WorldEnum world, LevelEnum level){
-        delete tileMap;
-        
+        //delete tileMap;
+        char idDataPath[256] = "Assets/Worlds/World1/1-1idData.txt";
+        char mapLayoutPath[256] = "Assets/Worlds/World1/1-1.txt"; 
+        //snprintf(idDataPath, sizeof(idDataPath), "Assets/Worlds/World%s/%s-%sidData.txt", worldEnumToCStr(world), worldEnumToCStr(world), levelEnumToCStr(level));
+
+        //snprintf(mapLayoutPath, sizeof(mapLayoutPath), "Assets/Worlds/World%s/%s-%s.txt", worldEnumToCStr(world), worldEnumToCStr(world), levelEnumToCStr(level));
+        /*
         char* filePathId = (char*)malloc(sizeof(char) * 34); // 34 is the size of the file path, cool I know;
         filePathId[0] = '\0';
         auto basePath = "Assets/Worlds/World";                  //auto 'cause lazy, sorry                                   
@@ -23,7 +28,7 @@ public:
         strcpy(filePath, filePathId);
         strcat(filePathId, "idData.txt");
         strcat(filePath, ".txt");
-        
+        */
         std::ifstream IdDataFile(filePathId);
         int* idList;
         IdDataFile >> totalNrOfIds;
@@ -50,8 +55,8 @@ public:
         //if(worldHeigthPixels < SCREEN_HEIGHT)
           //  worldHeigthPixels = SCREEN_HEIGHT;
 
-        free(filePathId);
-        free(filePath);
+       // free(filePathId);
+        //free(filePath);
         return idList;
     }
     
@@ -62,12 +67,16 @@ public:
             for(int j = 0; j < 16; j++){
                 x = srcRect.x + i;
                 y = srcRect.y + j;
-                sprite[i * 16 + j] = spriteSheet[x * 192 + y];
+                sprite[i * 16 + j] = spriteSheet[x * 16 + y];
             }
         return sprite;
     }
     
     void render(SDL_Renderer* renderer, camera* Camera, tileAssetManager* assets) {
+        struct timeval start, end;
+        gettimeofday(&start, NULL);
+
+
         int startCol = std::max(0, static_cast<int>(std::floor(Camera->getX() / TEXTURE_WIDTH)));
         int endCol = std::min(tileMapWidth, static_cast<int>(std::ceil((Camera->getX() + SCREEN_WIDTH) / TEXTURE_WIDTH)));
         int startRow = std::max(0, static_cast<int>(std::floor(Camera->getY() / TEXTURE_HEIGHT)));
@@ -90,7 +99,11 @@ public:
 
                 renderer->addToMemory(destRect, texture);
             }
-        }       
+        }   
+        
+        gettimeofday(&end, NULL);
+        long ms = (end.tv_sec - start.tv_sec) * 1000 + (end.tv_usec - start.tv_usec)/1000;
+        printf("Time: %ld ms\n", ms);    
     }       
     
   

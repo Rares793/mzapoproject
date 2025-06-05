@@ -10,6 +10,7 @@ public:
 
     void init() {
         gameIsRunning = true;
+        renderer = new SDL_Renderer();
         renderer->initialise();
                     
         Player = new player();
@@ -29,6 +30,7 @@ public:
     }
        
     void play() {
+        renderer->displayStartScreen();
         double lastTime = getCurrentTimeSeconds();
         renderer->turn_on_leds(0b00000011);
         while (gameIsRunning) {

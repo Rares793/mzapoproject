@@ -20,9 +20,10 @@ public:
         entityTexture = new uint16_t[numPixels];
         std::string hexValue;
         int i = 0;
-        while(fin >> hexValue && i < numPixels)
+        while(fin >> hexValue && i < numPixels){
             entityTexture[i++] = static_cast<uint16_t>(std::stoul(hexValue, nullptr, 16));
-        
+            printf("%d ", entityTexture[i]);
+        }
         entityRect.x = static_cast<int>(entityX);
         entityRect.y = static_cast<int>(entityY);
         entityWidth = static_cast<float>(entityRect.w); 
@@ -30,16 +31,22 @@ public:
     }
                                 
     bool is_left_pressed() {
+        if(!spilled_base)
+            return 0;
         uint32_t val = spiled_base[SPILED_REG_KBDRD_KNOBS_DIRECT_o / 4];
         return val & (1 << 26);
     }
 
     bool is_middle_pressed() {
+        if(!spilled_base)
+            return 0;
         uint32_t val = spiled_base[SPILED_REG_KBDRD_KNOBS_DIRECT_o / 4];
         return val & (1 << 27);
     }
 
     bool is_right_pressed() {
+        if(!spilled_base)
+            return 0;
         uint32_t val = spiled_base[SPILED_REG_KBDRD_KNOBS_DIRECT_o / 4];
         return val & (1 << 28);
     }
@@ -47,11 +54,15 @@ public:
     void handleInput() override {
         entityVX = 0.0f;
 
-        if (is_middle_pressed()) 
+        uint32_t state = spiled_base[SPILED_REG_KNOBS_8BIT_o / 4];
+        bool inputRight = (state >> 24) & 1;
+        bool inputLeft = (state >> 25) & 1;
+        bool inputJump = (state >> 26) & 1;
+        if (inputLeft) 
             entityVX = -MOVE_SPEED;
-        if (is_right_pressed()) 
+        if (inputRight) 
             entityVX = MOVE_SPEED;
-        if (is_left_pressed()){ 
+        if (inputJump){ 
             entityVY = JUMP_STRENGTH;
             onGround = 0;
         }
