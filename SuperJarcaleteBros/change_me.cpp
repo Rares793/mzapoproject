@@ -18,6 +18,7 @@ int main(int argc, char *argv[])
 
     /* Serialize execution of applications */
 
+#if 0
     /* Try to acquire lock the first */
     if (serialize_lock(1) <= 0) {
         printf("System is occupied\n");
@@ -28,7 +29,7 @@ int main(int argc, char *argv[])
         serialize_lock(0);
         }
     }
-
+#endif
     printf("Hello world\n");
 
     sleep(4);
@@ -42,7 +43,8 @@ int main(int argc, char *argv[])
     return 0;
     
   /* Release the lock */
+#if 0
     serialize_unlock();
-
+#endif
     return 0;
 }
