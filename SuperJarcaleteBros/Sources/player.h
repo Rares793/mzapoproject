@@ -29,27 +29,6 @@ public:
         entityWidth = static_cast<float>(entityRect.w); 
         entityHeight = static_cast<float>(entityRect.h); 
     }
-                                
-    bool is_left_pressed() {
-        if(!spilled_base)
-            return 0;
-        uint32_t val = spiled_base[SPILED_REG_KBDRD_KNOBS_DIRECT_o / 4];
-        return val & (1 << 26);
-    }
-
-    bool is_middle_pressed() {
-        if(!spilled_base)
-            return 0;
-        uint32_t val = spiled_base[SPILED_REG_KBDRD_KNOBS_DIRECT_o / 4];
-        return val & (1 << 27);
-    }
-
-    bool is_right_pressed() {
-        if(!spilled_base)
-            return 0;
-        uint32_t val = spiled_base[SPILED_REG_KBDRD_KNOBS_DIRECT_o / 4];
-        return val & (1 << 28);
-    }
                                    
     void handleInput() override {
         entityVX = 0.0f;

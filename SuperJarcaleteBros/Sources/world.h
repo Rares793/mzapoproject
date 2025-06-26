@@ -9,8 +9,8 @@ class world{
 public:
     int* loadTileMap(WorldEnum world, LevelEnum level){
         //delete tileMap;
-        char idDataPath[256] = "Assets/Worlds/World1/1-1idData.txt";
-        char mapLayoutPath[256] = "Assets/Worlds/World1/1-1.txt"; 
+        char filePathId[256] = "Assets/Worlds/World1/1-1idData.txt";
+        char filePath[256] = "Assets/Worlds/World1/1-1.txt"; 
         //snprintf(idDataPath, sizeof(idDataPath), "Assets/Worlds/World%s/%s-%sidData.txt", worldEnumToCStr(world), worldEnumToCStr(world), levelEnumToCStr(level));
 
         //snprintf(mapLayoutPath, sizeof(mapLayoutPath), "Assets/Worlds/World%s/%s-%s.txt", worldEnumToCStr(world), worldEnumToCStr(world), levelEnumToCStr(level));
@@ -67,7 +67,7 @@ public:
             for(int j = 0; j < 16; j++){
                 x = srcRect.x + i;
                 y = srcRect.y + j;
-                sprite[i * 16 + j] = spriteSheet[x * 16 + y];
+                sprite[i * 16 + j] = spriteSheet[x * 16 + y]; //y * 192 + x
             }
         return sprite;
     }
@@ -103,7 +103,7 @@ public:
         
         gettimeofday(&end, NULL);
         long ms = (end.tv_sec - start.tv_sec) * 1000 + (end.tv_usec - start.tv_usec)/1000;
-        printf("Time: %ld ms\n", ms);    
+        //printf("Time: %ld ms\n", ms);    
     }       
     
   
@@ -139,11 +139,8 @@ private:
     int* tileMap; //flattened 2D, too much CUDA what can I do?
     int tileMapWidth = 0, tileMapHeigth = 0, tileMapSize = 0;
     int totalNrOfIds = 0;
-    //int totalNrOfObjects = 0;
     float worldWidthPixels = 0, worldHeigthPixels = 0;
     int tileSize = 16;
-//totalNrOfObjects is unused, it could be used to only keep in memory actual objects, skipping the sky which utilises too much memory. For now it's not implemented because of convenience
-//but if the performance is too bad because the RAM is somehow overutilised, it is one good idea.
 };
 #endif
 

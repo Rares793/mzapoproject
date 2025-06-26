@@ -1,11 +1,6 @@
 #ifndef UTILITIES_H
 #define UTILITIES_H
-
-
 #include "mySDL.h"
-
-
-
 
 // Screen dimensions
 // 320x480 with 16x16 textures => 20x30 => 600 objects
@@ -15,11 +10,11 @@ const int TEXTURE_WIDTH = 16;
 const int TEXTURE_HEIGHT = 16;
 
 const int TILE_SIZE = 16; // this isn't ideal which is why I will avoid using it as much as possible
-const float GRAVITY = 98000.0f; // Pixels per second per second
+const float GRAVITY = 980000.0f; // Pixels per second per second, really big values because of the difference in framerate between laptop and board
 const float JUMP_STRENGTH = -4000.0f; // Negative is up, pixels per second
 const float MOVE_SPEED = 22500.0f; // Pixels per second for horizontal movement
 const float GOOMBA_MOVE_SPEED = 100.0f;
-const float MAX_FALL_SPEED = 600000.0f;                                 
+const float MAX_FALL_SPEED = 980000.0f;                                 
 enum WorldEnum{
     WORLD_1,
     WORLD_2,
@@ -33,11 +28,6 @@ enum LevelEnum{
     LEVEL_3,
     LEVEL_4
 };         
-
-struct goombaSpawns{
-    int x, y;
-    bool alive = 0;
-};
 
 int toInt(std::string id){
     int value = 0;
@@ -66,23 +56,4 @@ const char* levelEnumToChar(LevelEnum level) {
     }
 }
 
-volatile uint32_t *spiled_base = nullptr;
-
-void init_knob_input() {
-    int fd = open("/dev/mem", O_RDWR | O_SYNC);
-    if (fd < 0) {
-        perror("open /dev/mem failed");
-        return;
-    }
-
-    spiled_base = (uint32_t *) mmap(NULL, SPILED_REG_SIZE,
-                                    PROT_READ | PROT_WRITE, MAP_SHARED,
-                                    fd, SPILED_REG_BASE_PHYS);
-    if (spiled_base == MAP_FAILED) {
-        perror("mmap failed");
-        spiled_base = nullptr;
-    }
-
-    close(fd);
-}
 #endif

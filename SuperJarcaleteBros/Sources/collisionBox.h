@@ -85,7 +85,8 @@ public:
         return 0;        //this is to satisfy the compiler gods, no warnings on my watch                                                                                                                                     
     }
     
-        //this is meant for the AI to not fall like morons to their death              
+        //this is meant for the AI to not fall like morons to their death          
+        //ignore this part tho.    
     int checkEdgeRight(world* gameWorld, tileAssetManager *assets, float& entityX, float& entityY,
                   float& entityVX, SDL_Rect& entityRect, float& entityHeight, float& entityWidth){     
         int tileSize = gameWorld->getTileSize();    
@@ -98,7 +99,7 @@ public:
         if(!assets->isTileSolid(tileBelowRightEdge) && gameWorld->getTileIdAT(rightTileCol, bottomTile) != 9)
             if(entityY + colBoxH >= (float)(bottomTile +1) * tileSize -1.0f){
                 entityVX = -GOOMBA_MOVE_SPEED;
-                return 1;         //so, fun fact, this gives ILLEGAL INSTRUCTION while compilling. Damn, I am good.
+                return 1;       
             }
     }
                       

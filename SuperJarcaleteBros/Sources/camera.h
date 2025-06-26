@@ -12,13 +12,13 @@ public:
         float smoothingFactorX = 0.01f; 
         float smoothingFactorY = 0.01f; 
  //       printf("\nInside Camera X: %f, Y%f\n", Player->getX(), Player->getY());
-        if (deltaTime > 0.0f) { 
-            cameraX = lerp(cameraX, targetCamX, 1.0f - std::pow(smoothingFactorX, deltaTime));
-            cameraY = lerp(cameraY, targetCamY, 1.0f - std::pow(smoothingFactorY, deltaTime));
-        } else {
+        //if (deltaTime > 0.0f) { 
+          //  cameraX = lerp(cameraX, targetCamX, 1.0f - std::pow(smoothingFactorX, deltaTime));
+            //cameraY = lerp(cameraY, targetCamY, 1.0f - std::pow(smoothingFactorY, deltaTime));
+        //} else {
             cameraX = targetCamX;
             cameraY = targetCamY;
-        }
+        //}
       
         if(cameraX < 0)
             cameraX = 0;
